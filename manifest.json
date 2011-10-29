@@ -21,5 +21,6 @@
     "matches": ["https://plus.google.com/*"],
     "js": ["js/embed_data.js", "js/embed_injection.js"],
     "run_at": "document_end"
-  }]
+  }],
+  "content_security_policy": "default-src 'none'; script-src 'self'"
 }
