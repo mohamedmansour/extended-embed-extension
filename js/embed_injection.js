@@ -104,43 +104,22 @@ EmbedInjection.prototype.getDomain = function(url) {
 };
 
 /**
- * Fetch the embed html for the URL given. We only support the ones in
- * the object called EmbedData/
+ * Call the background page to get the URL embedded contents.
  *
  * @param {string} domain The domain we are embedding for.
  * @param {string} url The embed URL..
  * @param {Function} callback The callback URL when an embed was found.
  */
 EmbedInjection.prototype.getEmbedHTML = function(domain, url, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
-  xhr.onload = function(e) {
-    if (xhr.status == 200) {
-      var response = JSON.parse(xhr.responseText);
-      switch(response.type) {
-        case 'link':
-        case 'video':
-        case 'rich':
-          var html = response.html;
-          // Nasty hack because soundcloud messes up with ssl support.
-          if (domain == 'soundcloud') {
-            html = html.replace(/http:\/\//g, 'https://');
-          }
-          callback(html);
-          break;
-        case 'photo':
-          callback('<p><strong>' + response.title + '</strong></p><a href="' +
-                    response.author_url + '">' + '<img src="' + response.url +
-                   '" alt="' + response.title + '" width="' + response.width + 
-                   '" height="' + response.height + '"/></a>');
-          break;
-      }
+  chrome.extension.sendRequest({
+    method: 'GetEmbedHTML',
+    data: {
+      domain: domain,
+      url: url
     }
-    else {
-      console.error('embed-extension: Cannot load ' + url);
-    }
-  };
-  xhr.send(null);
+  }, function(response) {
+    callback(response.data);
+  });
 };
 
 // Main
