@@ -72,6 +72,15 @@ EmbedInjection.prototype.renderItem = function(itemDOM) {
           // TODO: Would be nice to cache this.
           this.getEmbedHTML(domain, oEmbedURL, function(html) {
             embedContainer.innerHTML  = html;
+            
+            // Make sure embed objects have the wmode attribute so we can
+            // pass control to the DOM to overlay. Refresh the DOM to get
+            // the values.
+            var objectdDOM = embedContainer.querySelector('object');
+            if (objectdDOM) {
+              objectdDOM.setAttribute('wmode', 'opaque');
+              embedContainer.innerHTML  = embedContainer.innerHTML;
+            }
           });
         }
       }
@@ -115,7 +124,7 @@ EmbedInjection.prototype.getEmbedHTML = function(domain, url, callback) {
           var html = response.html;
           // Nasty hack because soundcloud messes up with ssl support.
           if (domain == 'soundcloud') {
-            html = html.replace('http://', 'https://');
+            html = html.replace(/http:\/\//g, 'https://');
           }
           callback(html);
           break;
