@@ -6,6 +6,7 @@
  */
 BackgroundController = function() {
   this.onExtensionLoaded();
+  this._embedCache = {};
 };
 
 /**
@@ -51,9 +52,22 @@ BackgroundController.prototype.init = function() {
   chrome.extension.onRequest.addListener(this.onMessage.bind(this));
 };
 
+/**
+ * Message Passing Listener.
+ */
 BackgroundController.prototype.onMessage = function(request, sender, response) {
   if (request.method == 'GetEmbedHTML') {
-    this.getEmbedHTML(request.data.domain, request.data.url, response);
+    var url = request.data.url;
+    var cachedHTML = this._embedCache[url];
+    if (cachedHTML) {
+      response({data: cachedHTML});
+    }
+    else {
+      this.getEmbedHTML(request.data.domain, url, function(html) {
+        this._embedCache[url] = html;
+        response({data: html});
+      }.bind(this));
+    }
   }
 };
 
@@ -80,14 +94,14 @@ BackgroundController.prototype.getEmbedHTML = function(domain, url, callback) {
           if (domain == 'soundcloud') {
             html = html.replace(/http:\/\//g, 'https://');
           }
-          callback({data: html});
+          callback(html);
           break;
         case 'photo':
           var html = '<p><strong>' + response.title + '</strong></p><a href="' +
                      response.author_url + '">' + '<img src="' + response.url +
                      '" alt="' + response.title + '" width="' + response.width + 
                      '" height="' + response.height + '"/></a>'
-          callback({data: html});
+          callback(html);
           break;
       }
     }
