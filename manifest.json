@@ -1,0 +1,25 @@
+{
+  "name": "Extended Embed BETA for Google Plus",
+  "version": "0.0.6",
+  "description": "Automatically embed a rich content in Google+ such as flickr, soundcloud, hulu, slideshare, smugmug, and revision3.",
+  "icons": {
+    "16": "img/icon16.png",
+    "32": "img/icon32.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  },
+  "permissions": [
+    "https://soundcloud.com/oembed*",
+    "https://secure.flickr.com/services/oembed/*",
+    "http://www.slideshare.net/api/oembed/2*",
+    "https://api.smugmug.com/services/oembed/*",
+    "http://www.hulu.com/api/oembed.json*",
+    "http://revision3.com/api/oembed/*"
+  ],
+  "background_page": "background.html",
+  "content_scripts": [{
+    "matches": ["https://plus.google.com/*"],
+    "js": ["js/embed_data.js", "js/embed_injection.js"],
+    "run_at": "document_end"
+  }]
+}
