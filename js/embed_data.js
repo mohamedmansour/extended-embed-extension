@@ -36,6 +36,6 @@ EmbedData = {
   },
   'slideshare': {
     regex: 'http[s]?://www.slideshare.net/[\\w-]+/[\\w-]+',
-    oembed: 'http://www.slideshare.net/api/oembed/2?format=json&url='
+    oembed: 'https://api.embed.ly/1/oembed?format=json&url='
   }
 };

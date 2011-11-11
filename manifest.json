@@ -11,8 +11,9 @@
   "permissions": [
     "https://soundcloud.com/oembed*",
     "https://secure.flickr.com/services/oembed/*",
-    "http://www.slideshare.net/api/oembed/2*",
     "https://api.smugmug.com/services/oembed/*",
+    "https://api.embed.ly/1/oembed*",
+    "http://www.slideshare.net/api/oembed/2*",
     "http://www.hulu.com/api/oembed.json*",
     "http://revision3.com/api/oembed/*"
   ],
