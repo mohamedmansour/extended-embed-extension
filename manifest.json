@@ -1,6 +1,6 @@
 {
   "name": "Extended Embed BETA for Google Plus",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Automatically embed a rich content in Google+ such as flickr, soundcloud, hulu, slideshare, smugmug, and revision3.",
   "icons": {
     "16": "img/icon16.png",
@@ -21,6 +21,5 @@
     "matches": ["https://plus.google.com/*"],
     "js": ["js/embed_data.js", "js/embed_injection.js"],
     "run_at": "document_end"
-  }],
-  "content_security_policy": "default-src 'none'; script-src 'self'"
+  }]
 }
