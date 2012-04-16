@@ -56,33 +56,38 @@ EmbedInjection.prototype.renderItem = function(itemDOM) {
   if (!itemDOM || !itemDOM.parentNode || itemDOM.innerText == '') {
     return;
   }
-  var embedDOM = itemDOM.querySelector('div[data-content-url]');
-  if (embedDOM) {
-    var embedContainer = embedDOM.parentNode;
-    var dataURL = embedDOM.getAttribute('data-content-url');
-    
-    // We get the domain so we can quickly figure out what embed data it is for.
-    // We do this instead of iterating the map.
-    var domain = this.getDomain(dataURL);
-    if (domain) {
-      var embedAvailable = EmbedData[domain];
-      if (embedAvailable) {
-        if (dataURL.search(embedAvailable.regex) != -1) {
-          var oEmbedURL = embedAvailable.oembed + dataURL;
-          // TODO: Would be nice to cache this.
-          this.getEmbedHTML(domain, oEmbedURL, function(html) {
-            embedContainer.innerHTML  = html;
-            
-            // Make sure embed objects have the wmode attribute so we can
-            // pass control to the DOM to overlay. Refresh the DOM to get
-            // the values.
-            var objectdDOM = embedContainer.querySelector('object');
-            if (objectdDOM) {
-              objectdDOM.setAttribute('wmode', 'opaque');
-              embedContainer.innerHTML  = embedContainer.innerHTML;
-            }
-          });
-        }
+  var embedDOM = itemDOM.querySelector('div > div > div:nth-of-type(3) > div:nth-of-type(2)');
+  if (!embedDOM) {
+    return;
+  }
+  var dataURL = embedDOM.querySelector('a[target="_blank"]');
+  if (!dataURL) {
+    return;
+  }
+  
+  dataURL = dataURL.getAttribute('href');
+  
+  // We get the domain so we can quickly figure out what embed data it is for.
+  // We do this instead of iterating the map.
+  var domain = this.getDomain(dataURL);
+  if (domain) {
+    var embedAvailable = EmbedData[domain];
+    if (embedAvailable) {
+      if (dataURL.search(embedAvailable.regex) != -1) {
+        var oEmbedURL = embedAvailable.oembed + dataURL;
+        // TODO: Would be nice to cache this.
+        this.getEmbedHTML(domain, oEmbedURL, function(html) {
+          embedDOM.innerHTML  = html;
+          
+          // Make sure embed objects have the wmode attribute so we can
+          // pass control to the DOM to overlay. Refresh the DOM to get
+          // the values.
+          var objectdDOM = embedDOM.querySelector('object');
+          if (objectdDOM) {
+            objectdDOM.setAttribute('wmode', 'opaque');
+            embedDOM.innerHTML  = embedDOM.innerHTML;
+          }
+        });
       }
     }
   }
